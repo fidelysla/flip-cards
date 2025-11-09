@@ -65,7 +65,7 @@
     const $flip_front = document.querySelectorAll(".flip-front");
     const $flip_back = document.querySelectorAll(".flip-back");
 
-    console.log($flip_card);
+    // console.log($flip_card);
     
 
     $flip_front.forEach((el, index) => {
@@ -76,22 +76,11 @@
         el.innerHTML = arr[index][1]
     });
 
-    // $flip_card.forEach((el) => {
-
-    //     el.addEventListener("click", () => {
-    //         el.style.transform = "rotateY(180deg)"
-    //     })
-
-    //     el.addEventListener("mouseleave", () => {
-    //         el.style.transform = "rotateY(0deg)"
-    //     })
-    // })
-
 
     $flip_card.forEach((el) => {
 
         el.addEventListener("click", (e) => {
-            console.log(e.target);
+            // console.log(e.target);
             
             el.classList.toggle("flip-180")
         })
