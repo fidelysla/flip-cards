@@ -77,6 +77,7 @@ div {
 .flip-front {
     background-color: #c1285b;
     transform: rotateY(0deg);
+    font-weight: bold;
 }
 .flip-back {
     background-color: #fdfdfd;
