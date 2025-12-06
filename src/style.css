@@ -1,176 +1,290 @@
-html {
-    box-sizing: border-box;
-    font-size: 16px;
-    font-family: sans-serif;
-}
 
-*,
-*::after,
-*::before {
-    box-sizing: inherit;
-}
-
-h1,
-h2 {
-    margin: 0;
-}
-
-body {
-    margin: 0;
-}
-
-.main-header {
-    width: 100%;
-    height: 5dvh;
-    background-color: #c1285b;
-    display: flex;
-    flex-flow: row nowrap;
-    align-items: center;
-
-    .logo {
-        height: inherit;
-        aspect-ratio: 1 / 1;
-    }
-
-    h1 {
-        color: #fdfdfd;
-        margin-left: 1rem;
-        font-size: 5vw;
-        /* font-size: medium; */
-    }
-}
-
-section {
-    background-color: #313647;
-    width: 100%;
-    height: 95dvh;
-
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    /* grid-template-rows: repeat(auto, 1fr); */
-    /*gap: .5rem;*/
-    justify-content: center;
-    justify-items: center;
-
-}
-
-article {
-    width: 40vw;
-    height: 27vh;
-    /* border: thin solid black; */
-    /* background-color: palegreen; */
-
-    border-radius: 1rem;
-    margin: 1rem;
-
-    position: relative;
-    transition: transform 500ms;
-
-    perspective: 10rem;
-    transform-style: preserve-3d;
-
-    cursor: pointer;
-
-}
-
-/* article:hover {
-    transform: rotateY(180deg);
-} */
-
-div {
-    border-radius: 14px;
-    width: 100%;
-    height: 100%;
-    
-    text-align: center;
-    place-content: center;
-
-    position: absolute;
-    backface-visibility: hidden;
-
-    border: .5rem solid #fdfdfd;
-
-    font-size: 15vw;
-    font-weight: bold;
-}
-
-.flip-front {
-    background-color: #c1285b;
-    transform: rotateY(0deg);
-    font-weight: bold;
-}
-.flip-back {
-    background-color: #fdfdfd;
-    transform: rotateY(180deg);
-}
-
-.flip-180 {
-    transform: rotateY(180deg);
-}
-
-@media screen and (min-width: 768px) {
-    
-    .main-header {
-
-        h1 {
-            font-size: 3vw;
+        /* =========================================
+           1. VARIABLES Y MODO OSCURO/CLARO
+           ========================================= */
+        :root {
+            --bg-color: #f8f9fa;
+            --text-color: #212529;
+            --nav-bg: #ffffff;
+            --nav-border: #e9ecef;
+            --card-bg: #ffffff;
+            --card-text: #212529;
+            --accent-color: #3b82f6; /* Azul moderno */
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --nav-height-mobile: 60px;
+            --nav-height-pc: 70px;
         }
-    }
 
-}
-
-@media screen and (min-width: 1024px) {
-
-    .main-header {
-        width: 100%;
-        background-color: #c1285b;
-        display: flex;
-        flex-flow: row nowrap;
-        align-items: center;
-
-        h1 {
-            color: #fdfdfd;
-            font-size: 2vw;
+        /* Detectar preferencia de modo oscuro del sistema */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-color: #121212;
+                --text-color: #e0e0e0;
+                --nav-bg: #1e1e1e;
+                --nav-border: #333333;
+                --card-bg: #1e1e1e;
+                --card-text: #ffffff;
+                --accent-color: #60a5fa;
+                --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+            }
         }
-    }
 
-    section {
-        display: grid;
-        grid-template-columns: repeat(3, auto);
-        grid-template-rows: repeat(2, 1fr);
-    }
+        /* =========================================
+           2. ESTILOS GENERALES (RESET & BASE)
+           ========================================= */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
 
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
 
-    .flip-card {
-        width: 20vw;
-        height: 40vh;
-    }
+        /* Contenedor principal */
+        main {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            padding-bottom: calc(var(--nav-height-mobile) + 20px); /* Espacio para nav móvil */
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
 
-    div {
-        border-radius: 14px;
-        width: 100%;
-        height: 100%;
+        /* =========================================
+           3. GRID DE TARJETAS (FLIP CARDS)
+           ========================================= */
+        #card-container {
+            display: grid;
+            gap: 20px;
+            width: 100%;
+            max-width: 900px;
+            /* Por defecto 2x2 para Kana */
+            grid-template-columns: repeat(3, 1fr);
+        }
 
-        font-size: 6vw;
-        font-weight: bold;
+        /* Clase modificadora para Kanji (1 sola columna, centrada) */
+        #card-container.single-card-mode {
+            grid-template-columns: 1fr;
+            max-width: 300px;
+        }
 
-        /* background-color: rgb(255, 154, 188); */
-        /* border: medium solid black; */
-        /* text-align: center;
-        place-content: center;
+        /* Estructura 3D de la tarjeta */
+        .flip-card {
+            background-color: transparent;
+            aspect-ratio: 1 / 1; /* Cuadradas */
+            perspective: 1000px;
+            cursor: pointer;
+        }
 
-        position: absolute;
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+        }
 
-        backface-visibility: hidden; */
-    }
+        /* Clase que se añade con JS al hacer click para rotar */
+        .flip-card.flipped .flip-card-inner {
+            transform: rotateY(180deg);
+        }
 
-}
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: 16px;
+            background-color: var(--card-bg);
+            color: var(--card-text);
+            border: 1px solid var(--nav-border);
+        }
 
-@media screen and (min-width: 1300px) {
+        /* Cara Frontal */
+        .flip-card-front h2 {
+            font-size: 4rem;
+            font-weight: normal;
+        }
 
-    .flip-card {
-        width: 15vw;
-        height: 40vh;
-    }
+        /* Cara Trasera (Información) */
+        .flip-card-back {
+            transform: rotateY(180deg);
+            padding: 10px;
+        }
+        .flip-card-back h3 {
+            font-size: 2rem;
+            color: var(--accent-color);
+            margin-bottom: 5px;
+        }
+        .flip-card-back p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
 
-}
+        /* Ajuste especial para Kanji Grande */
+        .single-card-mode .flip-card-front h2 {
+            font-size: 8rem; /* Kanji gigante */
+        }
+
+        /* =========================================
+           4. BARRA DE NAVEGACIÓN (NAVBAR)
+           ========================================= */
+        .navbar {
+            background-color: var(--nav-bg);
+            border: 1px solid var(--nav-border);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .nav-btn {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 0.9rem;
+            padding: 10px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            font-weight: 600;
+            position: relative;
+        }
+
+        .nav-btn:hover, .nav-btn.active {
+            color: var(--accent-color);
+        }
+
+        /* Iconos simples con SVG */
+        .icon {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+        }
+
+        /* Dropdown Menu (Oculto por defecto) */
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: var(--nav-bg);
+            min-width: 120px;
+            box-shadow: var(--shadow);
+            border-radius: 8px;
+            border: 1px solid var(--nav-border);
+            z-index: 101;
+            overflow: hidden;
+        }
+
+        .dropdown-content button {
+            width: 100%;
+            text-align: center;
+            padding: 12px 16px;
+            border: none;
+            background: none;
+            color: var(--text-color);
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .dropdown-content button:hover {
+            background-color: var(--nav-border);
+        }
+
+        /* Lógica para mostrar dropdown */
+        .dropdown.show .dropdown-content {
+            display: block;
+        }
+
+        /* =========================================
+           5. ESTILOS ESPECÍFICOS MÓVIL (Smartphones)
+           ========================================= */
+        @media (max-width: 768px) {
+            .navbar {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                height: var(--nav-height-mobile);
+                border-top: 1px solid var(--nav-border);
+                box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+            }
+
+            /* Dropdown hacia arriba en móvil */
+            .dropdown-content {
+                bottom: 100%; /* Encima del botón */
+                left: 50%;
+                transform: translateX(-50%);
+                margin-bottom: 10px;
+            }
+            
+            /* Ajuste tamaño fuente kanji en móvil */
+            .single-card-mode .flip-card-front h2 {
+                font-size: 6rem; 
+            }
+        }
+
+        /* =========================================
+           6. ESTILOS ESPECÍFICOS PC (Desktop)
+           ========================================= */
+        @media (min-width: 769px) {
+            body {
+                padding-top: var(--nav-height-pc); /* Espacio para header fijo */
+            }
+
+            main {
+                padding-bottom: 20px; /* Resetear padding bottom del móvil */
+                align-items: center;
+                min-height: calc(100vh - var(--nav-height-pc));
+            }
+
+            .navbar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: var(--nav-height-pc);
+                border-bottom: 1px solid var(--nav-border);
+                justify-content: center;
+                gap: 40px;
+            }
+
+            .nav-btn {
+                flex-direction: row; /* Icono al lado del texto */
+                font-size: 1rem;
+            }
+
+            /* Dropdown hacia abajo en PC */
+            .dropdown-content {
+                top: 100%;
+                left: 0;
+                margin-top: 10px;
+            }
+            
+            /* El dropdown aparece al hacer hover en PC para mejor UX */
+            .dropdown:hover .dropdown-content {
+                display: block;
+            }
+        }
+    

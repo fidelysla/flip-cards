@@ -1,58 +1,74 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="public/flip-card.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Flip Cards Hiraga</title>
-    <meta name="google-site-verification" content="DyscjLGYhzCRTZOcgytZp4uML0x7Eb9SWR_pp-gNjcc" />
-	  <link rel="stylesheet" href="/src/style.css" />
-  </head>
-  <body>
 
-      <header class="main-header">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+	<link rel="icon" type="image/svg+xml" href="public/flip-card.svg" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="google-site-verification" content="DyscjLGYhzCRTZOcgytZp4uML0x7Eb9SWR_pp-gNjcc" />
+	<link rel="stylesheet" href="/src/style.css" />
+		
 
-        <img class="logo" src="public/flip-card.svg" alt="Main Logo" width="50" height="50" />
-        <h1>Flip Cards Hiraga</h1>
+	<title>JAPANESE CARDS</title>
 
-      </header>
+</head>
 
-    <section>
+<body>
+	<!-- HEADER / NAVBAR -->
+	<nav class="navbar">
+		<!-- Botón Hiragana -->
+		<button class="nav-btn" onclick="app.setMode('hiragana')" id="btn-hiragana">
+			<span style="font-size: 1.2rem; font-weight: bold;">あ</span>
+			<!-- <span>Hiragana</span> -->
+		</button>
 
-      <article class="flip-card">
-          <div class="flip-front"></div>
-          <div class="flip-back"></div>
-      </article>
-      <article class="flip-card">
-          <div class="flip-front"></div>
-          <div class="flip-back"></div>
-      </article>
-      <article class="flip-card">
-          <div class="flip-front"></div>
-          <div class="flip-back"></div>
-      </article>
-      <article class="flip-card">
-          <div class="flip-front"></div>
-          <div class="flip-back"></div>
-      </article>
-      <article class="flip-card">
-          <div class="flip-front"></div>
-          <div class="flip-back"></div>
-      </article>
-      <article class="flip-card">
-          <div class="flip-front"></div>
-          <div class="flip-back"></div>
-      </article>
+		<!-- Botón Katakana -->
+		<button class="nav-btn" onclick="app.setMode('katakana')" id="btn-katakana">
+			<span style="font-size: 1.2rem; font-weight: bold;">ア</span>
+			<!-- <span>Katakana</span> -->
+		</button>
 
-    </section>
+		<!-- Botón Kanji (Dropdown) -->
+		<div class="nav-btn dropdown" id="dropdown-kanji" onclick="app.toggleDropdown()">
+			<div style="display:flex; align-items:center; gap:4px;">
+				<span style="font-size: 1.2rem; font-weight: bold;">字</span>
+				<!-- <span>Kanji</span> -->
+				<!-- Icono flecha pequeña -->
+				<svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg>
+			</div>
 
-    <script>
+			<div class="dropdown-content">
+				<button onclick="event.stopPropagation(); app.setMode('kanji-n5')">Nivel N5</button>
+				<button onclick="event.stopPropagation(); app.setMode('kanji-n4')">Nivel N4</button>
+			</div>
+		</div>
+
+		<!-- Botón Recargar -->
+		<button class="nav-btn" onclick="app.reloadCards()">
+			<svg class="icon" viewBox="0 0 24 24">
+				<path
+					d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z" />
+			</svg>
+			<!-- <span>Recargar</span> -->
+		</button>
+	</nav>
+
+	<!-- CONTENIDO PRINCIPAL -->
+	<main>
+		<div id="card-container">
+			<!-- Las tarjetas se inyectan aquí con JS -->
+		</div>
+	</main>
+
+	<script>
       window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
     </script>
 	
     <script defer src="/_vercel/insights/script.js"></script>
 
-    <script type="module" src="/src/main.js"></script>
+    <script src="/src/main.js"></script>
 
-  </body>
+</body>
+
 </html>
