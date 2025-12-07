@@ -197,5 +197,9 @@ const app = {
 };
 
 // Arrancar app
-app.init();
+window.app = app;
 
+// Asegurar que el DOM esté listo antes de iniciar
+document.addEventListener("DOMContentLoaded", () => {
+    app.init();
+});
