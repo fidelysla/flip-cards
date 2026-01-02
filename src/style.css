@@ -220,6 +220,15 @@
         /* =========================================
            5. ESTILOS ESPECÍFICOS MÓVIL (Smartphones)
            ========================================= */
+
+        @media (max-width: 460px) {
+
+            #card-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+        }
+        
         @media (max-width: 768px) {
             .navbar {
                 position: fixed;
