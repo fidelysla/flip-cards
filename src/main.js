@@ -1,5 +1,12 @@
 
 /* =========================================
+    VERCEL SPEED INSIGHTS
+========================================= */
+import { injectSpeedInsights } from '@vercel/speed-insights';
+
+injectSpeedInsights();
+
+/* =========================================
     DATOS (Hiragana, Katakana, Kanji)
 ========================================= */
 
