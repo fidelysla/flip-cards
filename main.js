@@ -6,6 +6,11 @@ import { injectSpeedInsights } from '@vercel/speed-insights';
 
 injectSpeedInsights();
 
+// PWA
+
+import { registerSW } from 'virtual:pwa-register'
+registerSW({ immediate: true })
+
 /* =========================================
     DATOS (Hiragana, Katakana, Kanji)
 ========================================= */

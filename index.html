@@ -9,21 +9,27 @@
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
 	<meta http-equiv="Content-Language" content="es">
-	<meta name="theme-color" content="##2F4A62">
+	<meta name="theme-color" content="#2F4A62">
 	
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta name="robots" content="index, follow">
 	<meta name="description" content="Aprende japonés desde cero con FlipCards interactivas de Hiragana, Katakana y Kanji. Ideal para principiantes.">
 	<meta name="author" content="Fidel Ysla">
-	
+	<!-- <meta name="apple-mobile-web-app-capable" content="yes"> -->
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 	<meta name="google-site-verification" content="DyscjLGYhzCRTZOcgytZp4uML0x7Eb9SWR_pp-gNjcc" />
 	
 	<link rel="stylesheet" href="./src/style.css" />
 	<link rel="canonical" href="https://flip-cards-six.vercel.app/">
-	<link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
-	<link rel="apple-touch-icon" sizes="180x180" href="/favicon.png">
-	<link rel="icon" href="/favicon.ico" sizes="any">
+	<link rel="preconnect" href="https://vercel.com">
+	<link rel="preconnect" href="https://vitals.vercel-insights.com">
+	<!-- <link rel="manifest" href="/manifest.json"> -->
+
+	<!-- Favicons -->
 	<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+	<link rel="alternate icon" href="/favicon.ico" type="image/x-icon">
+	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+	<link rel="icon" type="image/png" href="/favicon.png" />
 
 	<!-- Open Graph Tags -->
 	<meta property="og:title" content="Aprende japonés desde cero con FlipCards interactivas">
@@ -40,6 +46,11 @@
 	<meta name="twitter:title" content="Aprende japonés desde cero con FlipCards interactivas">
 	<meta name="twitter:description" content="Aprende japonés desde cero con FlipCards interactivas de Hiragana, Katakana y Kanji. Ideal para principiantes.">
 	<meta name="twitter:image" content="https://flip-cards-six.vercel.app/v2-og-image.png">
+
+	<script>
+      window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+    </script>
+    <script defer src="/_vercel/insights/script.js"></script>
 
 
 </head>
@@ -92,20 +103,15 @@
 		</div>
 	</main>
 
-	<script>
-      window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
-    </script>
-	
-    <script defer src="/_vercel/insights/script.js"></script>
+	<!-- VERCEL INSIGHTS & SPEED INSIGHTS SCRIPTS -->
+
 
 	<script>
 		window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
 	</script>
-
 	<script defer src="/_vercel/speed-insights/script.js"></script>
-	
 
-    <script type="module" src="/src/main.js"></script>
+    <script type="module" src="/main.js"></script>
 
 </body>
 
