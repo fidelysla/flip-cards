@@ -2,14 +2,12 @@
 /* =========================================
     VERCEL SPEED INSIGHTS
 ========================================= */
-// import { injectSpeedInsights } from '@vercel/speed-insights';
-
-// injectSpeedInsights();
+import { injectSpeedInsights } from '@vercel/speed-insights';
+injectSpeedInsights();
 
 // PWA
-
-// import { registerSW } from 'virtual:pwa-register'
-// registerSW({ immediate: true })
+import { registerSW } from 'virtual:pwa-register'
+registerSW({ immediate: true })
 
 /* =========================================
     DATOS (Hiragana, Katakana, Kanji)
@@ -70,158 +68,92 @@ const data = {
     LÓGICA DE LA APLICACIÓN
 ========================================= */
 
-class App {
+const app = {
 
-    constructor() {
-        this.currentMode = 'hiragana';
-        this.container = document.getElementById('card-container');
-    }
+    currentMode: 'hiragana', // Por defecto
+    container: document.getElementById('card-container'),
 
     // Inicializar
-    init() {
+    init: function () {
         this.setMode('hiragana');
-        this.addEventListeners();
-    }
 
-    // Manejador de eventos
-    addEventListeners() {
-
-        // 1. Botones de Modo (Hiragana / Katakana)
-        document.getElementById('btn-hiragana').addEventListener('click', () => {
-            this.setMode('hiragana');
-        });
-
-        document.getElementById('btn-katakana').addEventListener('click', () => {
-            this.setMode('katakana');
-        });
-
-        // 2. Dropdown Kanji (Abrir/Cerrar)
-        document.getElementById('dropdown-kanji').addEventListener('click', () => {
-            this.toggleDropdown();
-        });
-
-        // 3. Opciones del Dropdown (N5 / N4)
-        document.querySelector('.btn-n5').addEventListener('click', (e) => {
-            e.stopPropagation();
-            this.setMode('kanji-n5');
-        });
-
-        document.querySelector('.btn-n4').addEventListener('click', (e) => {
-            e.stopPropagation();
-            this.setMode('kanji-n4');
-        });
-
-        // 4. Botón Recargar
-        document.getElementById('.btn-reload').addEventListener('click', () => {
-            this.reloadCards();
-        });
-
-        // 5. Cerrar dropdown si se hace clic fuera (Listener global)
+        // Cerrar dropdown si se hace clic fuera OK
         document.addEventListener('click', (e) => {
-            const dropdown = document.querySelector('.dropdown');
-            // Si el clic NO fue dentro del dropdown, ciérralo
-            if (dropdown && !e.target.closest('.dropdown')) {
-                dropdown.classList.remove('show');
+            if (!e.target.closest('.dropdown')) {
+                document.querySelector('.dropdown').classList.remove('show');
             }
         });
-
-
-    }
+    },
 
     // Cambiar Modo
-    setMode(mode){
-
-        // Validar que el modo sea válido
-        const validModes = ['hiragana', 'katakana', 'kanji-n5', 'kanji-n4'];
-        if (!validModes.includes(mode)) {
-            console.error(`Modo inválido: ${mode}`);
-            return;
-        }
-
+    setMode: function (mode) {
         this.currentMode = mode;
 
         // Actualizar estilo de botones (Active state)
         document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
 
-        const btnHiragana = document.getElementById('btn-hiragana');
-        const btnKatakana = document.getElementById('btn-katakana');
-        const dropdownKanji = document.getElementById('dropdown-kanji');
-        const dropdown = document.querySelector('.dropdown');
-
-        if (mode === 'hiragana' && btnHiragana) btnHiragana.classList.add('active');
-        else if (mode === 'katakana' && btnKatakana) btnKatakana.classList.add('active');
-        else if (mode.includes('kanji') && dropdownKanji) dropdownKanji.classList.add('active');
+        if (mode === 'hiragana') document.getElementById('btn-hiragana').classList.add('active');
+        else if (mode === 'katakana') document.getElementById('btn-katakana').classList.add('active');
+        else if (mode.includes('kanji')) document.getElementById('dropdown-kanji').classList.add('active');
 
         // Ocultar dropdown tras selección
-        if (dropdown) dropdown.classList.remove('show');
+        document.querySelector('.dropdown').classList.remove('show');
 
         this.renderCards();
-    } 
+    },
 
     // Mostrar/Ocultar Dropdown en móvil
-    toggleDropdown() {
+    toggleDropdown: function () {
         const dropdown = document.querySelector('.dropdown');
-        if (dropdown) dropdown.classList.toggle('show');
-    }
+        dropdown.classList.toggle('show');
+    },
 
     // Obtener elementos aleatorios
-    getRandomItems(arr, n) {
-        if (n > arr.length) throw new RangeError("getRandom: más elementos requeridos que disponibles");
-        
+    getRandomItems: function (arr, n) {
         const result = new Array(n);
         let len = arr.length;
         const taken = new Array(len);
-        
+        if (n > len) throw new RangeError("getRandom: más elementos requeridos que disponibles");
         while (n--) {
             const x = Math.floor(Math.random() * len);
             result[n] = arr[x in taken ? taken[x] : x];
             taken[x] = --len in taken ? taken[len] : len;
         }
         return result;
-    }
+    },
 
     // Recargar tarjetas
-    reloadCards() {
-        if (!this.container) return;
-
-        // Pequeña animación visual de recarga
+    reloadCards: function () {
+        // Pequeña animación visual de recarga (opcional)
         this.container.style.opacity = '0';
         setTimeout(() => {
             this.renderCards();
             this.container.style.opacity = '1';
         }, 200);
-    }
+    },
 
-    renderCards() {
-
-        if (!this.container) return;
-        
-        this.container.innerHTML = '';
+    // Renderizar HTML
+    renderCards: function () {
+        this.container.innerHTML = ''; // Limpiar
         let items = [];
         let isSingleCard = false;
 
-
-        // Nota: Asumimos que la variable global 'data' existe
-        try {
-            switch (this.currentMode) {
-                case 'hiragana':
-                    items = this.getRandomItems(data.hiragana, 6);
-                    break;
-                case 'katakana':
-                    items = this.getRandomItems(data.katakana, 6);
-                    break;
-                case 'kanji-n5':
-                    items = this.getRandomItems(data.kanjiN5, 1);
-                    isSingleCard = true;
-                    break;
-                case 'kanji-n4':
-                    items = this.getRandomItems(data.kanjiN4, 1);
-                    isSingleCard = true;
-                    break;
-            }
-        } catch (error) {
-            console.error("Error al obtener datos:", error);
-            return;
+        // Seleccionar datos según modo
+        switch (this.currentMode) {
+            case 'hiragana':
+                items = this.getRandomItems(data.hiragana, 6);
+                break;
+            case 'katakana':
+                items = this.getRandomItems(data.katakana, 6);
+                break;
+            case 'kanji-n5':
+                items = this.getRandomItems(data.kanjiN5, 1);
+                isSingleCard = true;
+                break;
+            case 'kanji-n4':
+                items = this.getRandomItems(data.kanjiN4, 1);
+                isSingleCard = true;
+                break;
         }
 
         // Ajustar Grid CSS
@@ -236,48 +168,48 @@ class App {
             const card = document.createElement('div');
             card.className = 'flip-card';
 
+            // Manejar rotación al hacer clic
+            card.onclick = function () {
+                this.classList.toggle('flipped');
+            };
 
-            card.addEventListener('click', (e) => {
-                e.currentTarget.classList.toggle('flipped');
-            });
-
-            // Contenido de la tarjeta (Anverso y Reverso) con Template Literals
-            let backContent;
+            // Contenido de la tarjeta (Anverso y Reverso)
+            let backContent = '';
 
             if (this.currentMode.includes('kanji')) {
-
+                // Estructura para Kanji
                 backContent = `
-                    <h3>${item.meaning}</h3>
-                    <p><strong>On:</strong> ${item.onyomi}</p>
-                    <p><strong>Kun:</strong> ${item.kunyomi}</p>
-                `;
+                            <h3>${item.meaning}</h3>
+                            <p><strong>On:</strong> ${item.onyomi}</p>
+                            <p><strong>Kun:</strong> ${item.kunyomi}</p>
+                        `;
             } else {
-
+                // Estructura para Kana
                 backContent = `<h3>${item.back}</h3>`;
             }
 
             card.innerHTML = `
-                <div class="flip-card-inner">
-                    <div class="flip-card-front">
-                        <h2>${item.char}</h2>
-                    </div>
-                    <div class="flip-card-back">
-                        ${backContent}
-                    </div>
-                </div>
-            `;
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front">
+                                <h2>${item.char}</h2>
+                            </div>
+                            <div class="flip-card-back">
+                                ${backContent}
+                            </div>
+                        </div>
+                    `;
 
             this.container.appendChild(card);
         });
-
     }
 
-}
 
-// Instanciar y arrancar app
-const appInstance = new App();
-window.app = appInstance;
+};
 
+// Arrancar app
+window.app = app;
+
+// Asegurar que el DOM esté listo antes de iniciar
 document.addEventListener("DOMContentLoaded", () => {
-    appInstance.init();
-})
+    app.init();
+});
