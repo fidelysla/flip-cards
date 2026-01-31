@@ -112,7 +112,7 @@ class App {
         });
 
         // 4. Botón Recargar
-        document.getElementById('.btn-reload').addEventListener('click', () => {
+        document.getElementById('btn-reload').addEventListener('click', () => {
             this.reloadCards();
         });
 
