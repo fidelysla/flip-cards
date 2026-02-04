@@ -75,10 +75,14 @@ class App {
     constructor() {
         this.currentMode = 'hiragana';
         this.container = document.getElementById('card-container');
+        this.container = null
     }
 
     // Inicializar
     init() {
+        this.container = document.getElementById('card-container');
+        
+        if (!this.container) console.warn('card-container not found');
         this.setMode('hiragana');
         this.addEventListeners();
     }
@@ -87,38 +91,51 @@ class App {
     addEventListeners() {
 
         // 1. Botones de Modo (Hiragana / Katakana)
-        document.getElementById('btn-hiragana').addEventListener('click', () => {
-            this.setMode('hiragana');
-        });
 
-        document.getElementById('btn-katakana').addEventListener('click', () => {
-            this.setMode('katakana');
-        });
+        const btnH = document.getElementById('btn-hiragana');
+        if (btnH) btnH.addEventListener('click', () => this.setMode('hiragana'));
+
+        const btnK = document.getElementById('btn-katakana');
+        if (btnK) btnK.addEventListener('click', () => this.setMode('katakana'));
 
         // 2. Dropdown Kanji (Abrir/Cerrar)
-        document.getElementById('dropdown-kanji').addEventListener('click', () => {
-            this.toggleDropdown();
-        });
+
+        const dropdownEl = document.getElementById('dropdown-kanji');
+        if (dropdownEl) dropdownEl.addEventListener('click', () => this.toggleDropdown());
+ 
 
         // 3. Opciones del Dropdown (N5 / N4)
-        document.querySelector('.btn-n5').addEventListener('click', (e) => {
+
+        const btnN5 = document.querySelector('.btn-n5');
+        const btnN4 = document.querySelector('.btn-n4');
+
+        if (btnN5) btnN5.addEventListener('click', (e) => {
             e.stopPropagation();
             this.setMode('kanji-n5');
         });
 
-        document.querySelector('.btn-n4').addEventListener('click', (e) => {
+        if (btnN4) btnN4.addEventListener('click', (e) => {
             e.stopPropagation();
             this.setMode('kanji-n4');
         });
 
         // 4. Botón Recargar
-        document.querySelector('#btn-reload').addEventListener('click', () => {
-            this.reloadCards();
-        });
+
+        const btnReload = document.getElementById('btn-reload');
+        if (btnReload) btnReload.addEventListener('click', () => this.reloadCards());
+
+        // document.querySelector('#btn-reload').addEventListener('click', (e) => {
+        //     e.stopPropagation();
+        //     this.reloadCards();
+        // });
 
         // 5. Cerrar dropdown si se hace clic fuera (Listener global)
         document.addEventListener('click', (e) => {
+            // console.log(e.target);
+            
             const dropdown = document.querySelector('.dropdown');
+
+            if (!dropdown) return;
             // Si el clic NO fue dentro del dropdown, ciérralo
             if (dropdown && !e.target.closest('.dropdown')) {
                 dropdown.classList.remove('show');
