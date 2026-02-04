@@ -121,18 +121,18 @@ class App {
 
         // 4. Botón Recargar
 
-        const btnReload = document.querySelector('#btn-reload');
+        const btnReload = document.getElementById('btn-reload');
         
-        if (btnReload) btnReload.addEventListener('click', (e) => {
+        if (btnReload) {
 
-            console.log(e.target);
-            
+            btnReload.addEventListener('click', (e) => {
 
-            e.stopPropagation();
-            
-            this.reloadCards();
+                e.preventDefault();      
+                this.reloadCards();
 
-        });
+            });
+
+        }
 
         // 5. Cerrar dropdown si se hace clic fuera (Listener global)
         document.addEventListener('click', (e) => {
