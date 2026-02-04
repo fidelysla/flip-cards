@@ -15,7 +15,7 @@
     DATOS (Hiragana, Katakana, Kanji)
 ========================================= */
 
-const data = {
+const x_data = {
     hiragana: [
         { char: 'あ', back: 'a' }, { char: 'い', back: 'i' }, { char: 'う', back: 'u' }, { char: 'え', back: 'e' }, { char: 'お', back: 'o' },
         { char: 'か', back: 'ka' }, { char: 'き', back: 'ki' }, { char: 'く', back: 'ku' }, { char: 'け', back: 'ke' }, { char: 'こ', back: 'ko' },
@@ -78,14 +78,52 @@ class App {
     }
 
     // Inicializar
-    init() {
+    async init() {
         this.container = document.getElementById('card-container');
         
-        if (!this.container) console.warn('card-container not found');
+        if (!this.container) {
+            console.warn('card-container not found');
+            return;
+        }
+
+        // Cargar datos desde JSON
+        await this.loadData();
+        
+        if (!this.data) {
+            console.error('❌ No se pudieron cargar los datos');
+            return;
+        }
 
         console.log('✅ Aplicación inicializada correctamente');
         this.setMode('hiragana');
         this.addEventListeners();
+    }
+
+    async loadData() {
+        try {
+            console.log('Cargando datos...');
+            const response = await fetch('src/data.json');
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            this.data = await response.json();
+            console.log('✅ Datos cargados correctamente');
+
+        } catch (error) {
+            
+            console.error('❌ Error al cargar datos:', error);
+            // Fallback: mostrar mensaje al usuario
+            if (this.container) {
+                this.container.innerHTML = `
+                    <div style="text-align: center; padding: 2rem; color: #e74c3c;">
+                        <h3>Error al cargar los datos</h3>
+                        <p>Por favor, recarga la página</p>
+                    </div>
+                `;
+            }
+        }
     }
 
     // Manejador de eventos
@@ -215,28 +253,27 @@ class App {
 
     renderCards() {
 
-        if (!this.container) return;
+        if (!this.container || !this.data) return;
         
         this.container.innerHTML = '';
         let items = [];
         let isSingleCard = false;
 
-
-        // Nota: Asumimos que la variable global 'data' existe
+        // Obtener datos según modo
         try {
             switch (this.currentMode) {
                 case 'hiragana':
-                    items = this.getRandomItems(data.hiragana, 6);
+                    items = this.getRandomItems(this.data.hiragana, 6);
                     break;
                 case 'katakana':
-                    items = this.getRandomItems(data.katakana, 6);
+                    items = this.getRandomItems(this.data.katakana, 6);
                     break;
                 case 'kanji-n5':
-                    items = this.getRandomItems(data.kanjiN5, 1);
+                    items = this.getRandomItems(this.data.kanjiN5, 1);
                     isSingleCard = true;
                     break;
                 case 'kanji-n4':
-                    items = this.getRandomItems(data.kanjiN4, 1);
+                    items = this.getRandomItems(this.data.kanjiN4, 1);
                     isSingleCard = true;
                     break;
             }
@@ -299,6 +336,12 @@ class App {
 const appInstance = new App();
 window.app = appInstance;
 
-document.addEventListener("DOMContentLoaded", () => {
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        console.log('DOM cargado, inicializando app...');
+        appInstance.init();
+    });
+} else {
+    console.log('DOM ya estaba cargado, inicializando app...');
     appInstance.init();
-})
+}
