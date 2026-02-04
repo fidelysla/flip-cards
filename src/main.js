@@ -74,7 +74,6 @@ class App {
 
     constructor() {
         this.currentMode = 'hiragana';
-        this.container = document.getElementById('card-container');
         this.container = null
     }
 
@@ -83,6 +82,8 @@ class App {
         this.container = document.getElementById('card-container');
         
         if (!this.container) console.warn('card-container not found');
+
+        console.log('✅ Aplicación inicializada correctamente');
         this.setMode('hiragana');
         this.addEventListeners();
     }
@@ -125,9 +126,8 @@ class App {
         
         if (btnReload) {
 
-            btnReload.addEventListener('click', (e) => {
+            btnReload.addEventListener('click', () => {
 
-                e.preventDefault();      
                 this.reloadCards();
 
             });
@@ -141,7 +141,7 @@ class App {
 
             if (!dropdown) return;
             // Si el clic NO fue dentro del dropdown, ciérralo
-            if (dropdown && !e.target.closest('.dropdown')) {
+            if (!e.target.closest('.dropdown')) {
                 dropdown.classList.remove('show');
             }
         });
